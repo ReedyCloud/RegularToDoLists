@@ -8,7 +8,7 @@ namespace RegularTodoListAPI.Controllers
     public class TodoController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetTodoList()
+        public IActionResult GetTodoList()
         {
             var res = new List<TodoItem>();
 

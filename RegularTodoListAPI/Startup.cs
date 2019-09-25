@@ -32,10 +32,7 @@ namespace RegularTodoListAPI
         {
             services.AddCors();
             services.AddDistributedMemoryCache();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(opt => {
-                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+            services.AddControllers();
             services.AddHttpContextAccessor();
 
             
@@ -85,7 +82,14 @@ namespace RegularTodoListAPI
             }
 
             // app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
