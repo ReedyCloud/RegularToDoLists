@@ -1,0 +1,39 @@
+
+
+.btnDelete {
+  font-size: 20px;
+  outline: none;
+  border: none;
+  float: left;
+  border-right: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+  padding: 5px;
+  border-bottom-right-radius: 20px;
+  background-color: salmon;
+  cursor: pointer;
+  transition: all 200ms;
+  &:hover {
+    background-color: rgb(255, 68, 47);
+  }
+  &::after {
+    content:'';
+    display:block;
+    clear:both;
+  }
+}
+
+.btnOpen {
+  font-size: 150%;
+  padding: 10px;
+  outline: none;
+  border: none;
+  cursor:  pointer;
+  width: 50%;
+  border: 2px solid #aaa;
+  transition: all 200ms;
+
+  &:hover{
+    background-color: rgb(126, 219, 126);
+  }
+
+}
