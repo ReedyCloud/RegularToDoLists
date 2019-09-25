@@ -1,0 +1,18 @@
+.Toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left:  2rem;
+  border-bottom: 2px solid #ddd;
+  font-family: inherit;
+  background-color: #fff;
+}
+
+.Logo {
+  height: 90%;
+}
