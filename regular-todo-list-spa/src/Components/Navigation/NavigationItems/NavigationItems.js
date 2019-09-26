@@ -6,9 +6,9 @@ import styles from './NavigationItems.module.scss';
 const navigationItems = (props) => {
   return(
     <nav className={styles.NavigationItems}>
-      <NavigationItem >Lists</NavigationItem>
-      <NavigationItem>Setting</NavigationItem>
-      <NavigationItem>Logout</NavigationItem>
+      <NavigationItem link="/lists" >Lists</NavigationItem>
+      <NavigationItem link="/settings">Setting</NavigationItem>
+      <NavigationItem link="/XD" >Logout</NavigationItem>
     </nav>
   );
 };

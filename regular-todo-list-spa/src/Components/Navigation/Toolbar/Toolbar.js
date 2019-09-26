@@ -7,7 +7,7 @@ import styles from './Toolbar.module.scss';
 const Toolbar = (props) => {
   return(
     <div className={styles.Toolbar}>
-      <img className={styles.Logo} src={Logo} />
+      <img className={styles.Logo} src={Logo} alt="" />
       <NavigationItems />
     </div>
   );
