@@ -82,6 +82,7 @@ namespace RegularTodoListAPI
             }
 
             // app.UseHttpsRedirection();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseRouting();
 
             app.UseAuthorization();
