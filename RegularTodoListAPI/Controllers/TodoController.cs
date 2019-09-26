@@ -116,5 +116,33 @@ namespace RegularTodoListAPI.Controllers
 
             return Ok();
         }
+
+        [HttpDelete]
+        public IActionResult DeleteTodoList([FromQuery] int todoListId)
+        {
+            var inDb = _db.TodoLists.FirstOrDefault(x => x.Id == todoListId);
+
+            if(inDb != null)
+            {
+                _db.TodoLists.Remove(inDb);
+                _db.SaveChanges();
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteTodoItem([FromQuery] int todoItemId)
+        {
+            var inDb = _db.TodoItems.FirstOrDefault(x => x.Id == todoItemId);
+
+            if(inDb != null)
+            {
+                _db.TodoItems.Remove(inDb);
+                _db.SaveChanges();
+            }
+
+            return Ok();
+        }
     }
 }
