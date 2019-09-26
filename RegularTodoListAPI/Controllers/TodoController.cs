@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RegularTodoListAPI.DataContexts;
 using RegularTodoListAPI.Dtos;
@@ -11,10 +12,12 @@ namespace RegularTodoListAPI.Controllers
     public class TodoController : ApiControllerBase
     {
         private readonly DataContext _db;
+        private readonly IMapper _mapper;
 
-        public TodoController(DataContext db)
+        public TodoController(DataContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -29,24 +32,11 @@ namespace RegularTodoListAPI.Controllers
                 var todoItemsDto = new List<TodoItemDto>();
 
                 foreach (var item in currTodoItems)
-                {
-                    todoItemsDto.Add(new TodoItemDto()
-                    {
-                        Id = item.Id,
-                        Description = item.Description,
-                        Name = item.Name,
-                        Priority = item.Priority,
-                        Status = item.Status,
-                        TodoListId = item.TodoListId
-                    });
-                }
+                    todoItemsDto.Add(_mapper.Map<TodoItemDto>(item));
 
-                res.Add(new TodoListDto()
-                {
-                    Id = todoList.Id,
-                    Title = todoList.Title,
-                    TodoItems = todoItemsDto
-                });
+                var list = _mapper.Map<TodoListDto>(todoList);
+                list.TodoItems = todoItemsDto;
+                res.Add(list);
             }
 
             return Ok(res);
@@ -59,24 +49,10 @@ namespace RegularTodoListAPI.Controllers
             var currTodoItems = _db.TodoItems.Where(x => x.TodoListId == todoList.Id).ToList();
             var todoItemsDto = new List<TodoItemDto>();
             foreach (var item in currTodoItems)
-            {
-                todoItemsDto.Add(new TodoItemDto()
-                {
-                    Id = item.Id,
-                    Description = item.Description,
-                    Name = item.Name,
-                    Priority = item.Priority,
-                    Status = item.Status,
-                    TodoListId = item.TodoListId
-                });
-            }
+                todoItemsDto.Add(_mapper.Map<TodoItemDto>(item));
 
-            var res = new TodoListDto()
-            {
-                Id = todoList.Id,
-                Title = todoList.Title,
-                TodoItems = todoItemsDto
-            };
+            var res = _mapper.Map<TodoListDto>(todoList);
+            res.TodoItems = todoItemsDto;
 
             return Ok(res);
         }
@@ -92,8 +68,7 @@ namespace RegularTodoListAPI.Controllers
         [HttpPost]
         public IActionResult AddTodoList([FromBody] TodoListDto todoListDto)
         {
-            var todoList = new TodoList();
-            todoList.Title = todoListDto.Title;
+            var todoList = _mapper.Map<TodoList>(todoListDto);
             todoList.UserId = 1;
 
             _db.TodoLists.Add(todoList);
@@ -105,12 +80,7 @@ namespace RegularTodoListAPI.Controllers
         [HttpPost]
         public IActionResult AddTodoItem([FromBody] TodoItemDto todoItemDto)
         {
-            var todoItem = new TodoItem();
-            todoItem.Priority = todoItemDto.Priority;
-            todoItem.Status = todoItemDto.Status;
-            todoItem.TodoListId = todoItemDto.TodoListId;
-            todoItem.Name = todoItemDto.Name;
-            todoItem.Description = todoItemDto.Description;
+            var todoItem = _mapper.Map<TodoItem>(todoItemDto);
             _db.TodoItems.Add(todoItem);
             _db.SaveChanges();
 

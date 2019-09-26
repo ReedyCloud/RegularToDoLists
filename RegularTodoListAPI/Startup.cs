@@ -19,6 +19,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RegularTodoListAPI.Cache;
+using AutoMapper;
+using RegularTodoListAPI.AutoMapper;
 
 namespace RegularTodoListAPI
 {
@@ -42,6 +44,7 @@ namespace RegularTodoListAPI
                 options.Cookie.IsEssential = true;
                 options.Cookie.Name = "SessionId";
             });
+            services.AddAutoMapper(typeof(Startup));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(opt => {
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
