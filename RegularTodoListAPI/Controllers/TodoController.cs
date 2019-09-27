@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RegularTodoListAPI.DataContexts;
 using RegularTodoListAPI.Dtos;
+using RegularTodoListAPI.Enums;
 using RegularTodoListAPI.Models;
 
 namespace RegularTodoListAPI.Controllers
@@ -109,6 +110,20 @@ namespace RegularTodoListAPI.Controllers
             if(inDb != null)
             {
                 _db.TodoItems.Remove(inDb);
+                _db.SaveChanges();
+            }
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult ChangeStatus(int todoItemId, TodoStatus status)
+        {
+            var inDb = _db.TodoItems.FirstOrDefault(x => x.Id == todoItemId);
+
+            if(inDb != null)
+            {
+                inDb.Status = status;
                 _db.SaveChanges();
             }
 
