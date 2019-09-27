@@ -17,23 +17,22 @@ class Lists extends React.Component {
 
   componentDidMount () {
     axios.get('GetTodoLists').then((response) =>{
-      let fetchedTasks = [];
-      fetchedTasks = (response.data.map(res => {
+      let fetchedLists = [];
+      fetchedLists = (response.data.map(res => {
         return {id: res.id, title: res.title, status:res.status}
       }));
-      this.setState({lists: fetchedTasks, loading: false});
+      this.setState({lists: fetchedLists, loading: false});
     });
 }
   componentDidUpdate =  () => {
     
       if(this.state.loading){
         axios.get('GetTodoLists').then((response) =>{
-          console.log(response);
-          let fetchedTasks = [];
-          fetchedTasks = (response.data.map(res => {
+          let fetchedLists= [];
+          fetchedLists = (response.data.map(res => {
             return {id: res.id, title: res.title, status:res.status}
         }));
-        this.setState({lists: fetchedTasks, loading: false});
+        this.setState({lists: fetchedLists, loading: false});
       });
     }
   }
@@ -43,8 +42,8 @@ class Lists extends React.Component {
     this.setState({loading: true, creatingList: false});
   }
 
-  listSelectHandler = (id) => {
-    this.props.history.push({pathname:'lists/'+ id});
+  listSelectHandler = (id, title) => {
+    this.props.history.push({pathname:'lists/'+ id + '/' +title});
   }
 
   listDeleteHandler = (id) => {
@@ -70,18 +69,16 @@ class Lists extends React.Component {
   render () {
 
     let lists = null;
-
     if(this.state.lists.length === 0){
      lists = <Spinner />
     }
     if(!this.state.loading){
-      
       lists = this.state.lists.map(list =>{
         return (
           <List
             key={list.id}
             title={list.title}
-            clicked={() =>this.listSelectHandler(list.id)}
+            clicked={() =>this.listSelectHandler(list.id, list.title)}
             listDelete={() => this.listDeleteHandler(list.id)} />
         );
       });

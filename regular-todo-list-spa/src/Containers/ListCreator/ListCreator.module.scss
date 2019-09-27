@@ -17,3 +17,8 @@
     padding: 0 5px;
   }
 }
+
+@keyframes enter {
+  from { transform: translateY(-100vh) }
+  top { transform: translateY(0) }
+}

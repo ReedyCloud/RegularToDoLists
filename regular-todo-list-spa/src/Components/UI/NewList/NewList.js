@@ -7,7 +7,7 @@ const newList = (props) => {
   return(
     <div className={styles.NewList}>
       <h2>New List</h2>
-      <Button btnType='btnOpen' clicked={props.clicked}>
+      <Button btnType='btnNewList' clicked={props.clicked}>
         Create
       </Button>
 
