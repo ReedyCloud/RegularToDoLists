@@ -1,6 +1,6 @@
 import axios from 'axios';
 const instance = axios.create({
-  baseURL: 'https://todo-af0a1.firebaseio.com/'
+  baseURL: 'http://localhost:5000/api/todo'
 });
 
 export default instance;
