@@ -37,7 +37,7 @@ class Task extends React.Component {
       <p>
         {this.props.description}
       </p>
-
+    
     </div>
   );
   }

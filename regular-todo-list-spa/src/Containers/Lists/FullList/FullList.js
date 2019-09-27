@@ -43,6 +43,37 @@ class FullList extends React.Component {
     });
   }
 
+  componentDidUpdate = () => {
+    if(this.state.loading){
+      axios.get('GetTodoList?todoListId=' + this.props.match.params.id).then(response =>{
+        let fetchedTasks = [];
+        fetchedTasks = (response.data.todoItems.map(task => {
+          return {
+            id: task.id,
+            name: task.name,
+            description: task.description,
+            priority: task.priority,
+            status: task.status
+            }
+        }));
+        fetchedTasks.forEach(task => {
+          switch(task.status){
+            case 0:
+              task.status = 'toDo';
+              break;
+            case 1:
+              task.status = 'workInProgress';
+              break;
+            case 2:
+              task.status = 'finished';
+              break;
+          }
+        });
+        this.setState({tasks: fetchedTasks, loading: false});
+      });
+    }
+  }
+
   onDragStart = (ev, id) => {
     ev.dataTransfer.setData('id', id);
   }
@@ -62,16 +93,16 @@ class FullList extends React.Component {
     let tasks = this.state.tasks.filter((task) => {
       if(task.id == id) {
         task.status = cat;
-
-
-        axios.put('ChangeStatus?todoItemId='+ task.id +'&status=' + xd[task.status]).then(res => {
-          console.log(res);
-        });
+        axios.put('ChangeStatus?todoItemId='+ task.id +'&status=' + xd[task.status]);
       }
       return task;
     });
 
     this.setState({tasks: tasks});
+  }
+
+  tasksUpdateHandler = () => {
+    this.setState({loading: true});
   }
  
  
@@ -107,7 +138,7 @@ class FullList extends React.Component {
         onDrop={(e) => {this.onDrop(e, 'toDo')}} >
           <div>
            <h3>To Do:</h3>
-          <NewTask listId={this.props.match.params.id} />
+          <NewTask listId={this.props.match.params.id} tasksUpdate={this.tasksUpdateHandler} />
 
            {states.toDo}
           </div>
@@ -117,9 +148,8 @@ class FullList extends React.Component {
         <div className={styles.ListState} 
         onDragOver={(e) =>this.onDragOver(e)}
         onDrop={(e) => {this.onDrop(e, 'workInProgress')}} >
-        <div onDragOver={(e) =>this.onDragOver(e)}
-        onDrop={(e) => {this.onDrop(e, 'workInProgress')}} >
-           <h3>Work in poggers:</h3>
+        <div  >
+           <h3>Work in Poggers:</h3>
            {states.workInProgress}
           </div>
         </div>
