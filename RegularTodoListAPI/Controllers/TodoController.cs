@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RegularTodoListAPI.DataContexts;
 using RegularTodoListAPI.Dtos;
 using RegularTodoListAPI.Enums;
@@ -12,6 +13,8 @@ namespace RegularTodoListAPI.Controllers
 {
     public class TodoController : ApiControllerBase
     {
+        #region Consts, readonly, ctors
+            
         private readonly DataContext _db;
         private readonly IMapper _mapper;
 
@@ -21,15 +24,19 @@ namespace RegularTodoListAPI.Controllers
             _mapper = mapper;
         }
 
+        #endregion
+
+        #region TodoList
+            
         [HttpGet]
-        public IActionResult GetTodoLists()
+        public async Task<IActionResult> GetTodoLists()
         {
-            var todoLists = _db.TodoLists.Where(x => x.UserId == 1).ToList();
+            var todoLists = await _db.TodoLists.Where(x => x.UserId == 1).ToListAsync();
 
             var res = new List<TodoListDto>();
             foreach (var todoList in todoLists)
             {
-                var currTodoItems = _db.TodoItems.Where(x => x.TodoListId == todoList.Id).ToList();
+                var currTodoItems = await _db.TodoItems.Where(x => x.TodoListId == todoList.Id).ToListAsync();
                 var todoItemsDto = new List<TodoItemDto>();
 
                 foreach (var item in currTodoItems)
@@ -44,10 +51,10 @@ namespace RegularTodoListAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTodoList([FromQuery] int todoListId)
+        public async Task<IActionResult> GetTodoList([FromQuery] int todoListId)
         {
-            var todoList = _db.TodoLists.FirstOrDefault(x => x.Id == todoListId);
-            var currTodoItems = _db.TodoItems.Where(x => x.TodoListId == todoList.Id).ToList();
+            var todoList = await _db.TodoLists.FirstOrDefaultAsync(x => x.Id == todoListId);
+            var currTodoItems = await _db.TodoItems.Where(x => x.TodoListId == todoList.Id).ToListAsync();
             var todoItemsDto = new List<TodoItemDto>();
             foreach (var item in currTodoItems)
                 todoItemsDto.Add(_mapper.Map<TodoItemDto>(item));
@@ -58,76 +65,82 @@ namespace RegularTodoListAPI.Controllers
             return Ok(res);
         }
 
-        [HttpGet]
-        public IActionResult GetTodoItem([FromQuery] int todoItemId)
-        {
-            var res = _db.TodoItems.FirstOrDefault(x => x.Id == todoItemId);
-
-            return Ok(res);
-        }
-
         [HttpPost]
-        public IActionResult AddTodoList([FromBody] TodoListDto todoListDto)
+        public async Task<IActionResult> AddTodoList([FromBody] TodoListDto todoListDto)
         {
             var todoList = _mapper.Map<TodoList>(todoListDto);
             todoList.UserId = 1;
 
-            _db.TodoLists.Add(todoList);
-            _db.SaveChanges();
-
-            return Ok();
-        }
-
-        [HttpPost]
-        public IActionResult AddTodoItem([FromBody] TodoItemDto todoItemDto)
-        {
-            var todoItem = _mapper.Map<TodoItem>(todoItemDto);
-            _db.TodoItems.Add(todoItem);
-            _db.SaveChanges();
+            await _db.TodoLists.AddAsync(todoList);
+            await _db.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpDelete]
-        public IActionResult DeleteTodoList([FromQuery] int todoListId)
+        public async Task<IActionResult> DeleteTodoList([FromQuery] int todoListId)
         {
-            var inDb = _db.TodoLists.FirstOrDefault(x => x.Id == todoListId);
+            var inDb = await _db.TodoLists.FirstOrDefaultAsync(x => x.Id == todoListId);
 
             if(inDb != null)
             {
                 _db.TodoLists.Remove(inDb);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
 
             return Ok();
         }
 
-        [HttpDelete]
-        public IActionResult DeleteTodoItem([FromQuery] int todoItemId)
+        #endregion
+
+        #region TodoItem
+
+        [HttpGet]
+        public async Task<IActionResult> GetTodoItem([FromQuery] int todoItemId)
         {
-            var inDb = _db.TodoItems.FirstOrDefault(x => x.Id == todoItemId);
+            var res = await _db.TodoItems.FirstOrDefaultAsync(x => x.Id == todoItemId);
+
+            return Ok(res);
+        }
+            
+        [HttpPost]
+        public async Task<IActionResult> AddTodoItem([FromBody] TodoItemDto todoItemDto)
+        {
+            var todoItem = _mapper.Map<TodoItem>(todoItemDto);
+            await _db.TodoItems.AddAsync(todoItem);
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTodoItem([FromQuery] int todoItemId)
+        {
+            var inDb = await _db.TodoItems.FirstOrDefaultAsync(x => x.Id == todoItemId);
 
             if(inDb != null)
             {
                 _db.TodoItems.Remove(inDb);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
 
             return Ok();
         }
 
         [HttpPut]
-        public IActionResult ChangeStatus(int todoItemId, TodoStatus status)
+        public async Task<IActionResult> ChangeStatus(int todoItemId, TodoStatus status)
         {
-            var inDb = _db.TodoItems.FirstOrDefault(x => x.Id == todoItemId);
+            var inDb = await _db.TodoItems.FirstOrDefaultAsync(x => x.Id == todoItemId);
 
             if(inDb != null)
             {
                 inDb.Status = status;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
 
             return Ok();
         }
+
+        #endregion
     }
 }
