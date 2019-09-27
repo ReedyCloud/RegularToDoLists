@@ -10,7 +10,7 @@ class List extends React.Component {
   render () {
     return(
       <div className={styles.List}>
-        <Button btnType={'btnDelete'}> Delete </Button>
+        <Button btnType={'btnDelete'} clicked={this.props.listDelete} > Delete </Button>
         <h2>{this.props.title}</h2>
         <p>Zadania x/x</p>
         <div>

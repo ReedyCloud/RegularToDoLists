@@ -1,62 +1,105 @@
 import React from 'react';
 
+import NewList from '../../Components/UI/NewList/NewList';
 import List from './List/List';
+import Spinner from '../../Components/UI/Spinner/Spinner';
 import styles from './Lists.module.scss';
+import axios from '../../axios';
+import ListCreator from '../ListCreator/ListCreator';
 
 class Lists extends React.Component {
 
   state = {
-    lists: [
-      {
-        id: 1,
-        name: 'list_name',
-        tasks: [
-          {taskName:'powieś się', taskState: 'toDo', taskPrio: false },
-          {taskName:'zrub to', taskState: 'toDo', taskPrio: false },
-          {taskName:'naucz sie', taskState: 'toDo', taskPrio: false },
-          {taskName:'jeb disa', taskState: 'toDo', taskPrio: false },
-        ]
-    },
-    {
-      id: 2,
-      name: 'list_name',
-      tasks: [
-        {taskName:'powieś się', taskState: 'toDo', taskPrio: false },
-        {taskName:'zrub to', taskState: 'toDo', taskPrio: false },
-        {taskName:'naucz sie', taskState: 'toDo', taskPrio: false },
-        {taskName:'jeb disa', taskState: 'toDo', taskPrio: false },
-      ]
-  },
-  {
-    id: 3,
-    name: 'list_name',
-    tasks: [
-      {taskName:'task_name1', taskState: 'toDo', taskPrio: false },
-      {taskName:'task_name2', taskState: 'toDo', taskPrio: false },
-      {taskName:'task_name3', taskState: 'toDo', taskPrio: false },
-      {taskName:'task_name4', taskState: 'toDo', taskPrio: false },
-    ]
+    lists: [],
+    creatingList: false,
+    loading: true
+  }
+
+  componentDidMount () {
+    axios.get('GetTodoLists').then((response) =>{
+      let fetchedTasks = [];
+      fetchedTasks = (response.data.map(res => {
+        return {id: res.id, title: res.title, status:res.status}
+      }));
+      this.setState({lists: fetchedTasks, loading: false});
+    });
 }
-    ]
+  componentDidUpdate =  () => {
+    
+      if(this.state.loading){
+        axios.get('GetTodoLists').then((response) =>{
+          console.log(response);
+          let fetchedTasks = [];
+          fetchedTasks = (response.data.map(res => {
+            return {id: res.id, title: res.title, status:res.status}
+        }));
+        this.setState({lists: fetchedTasks, loading: false});
+      });
+    }
+  }
+
+
+  listsUpdateHandler = () => {
+    this.setState({loading: true, creatingList: false});
   }
 
   listSelectHandler = (id) => {
-    this.props.history.push({pathname:'lists'+ id});
+    this.props.history.push({pathname:'lists/'+ id});
+  }
+
+  listDeleteHandler = (id) => {
+    axios.delete('/DeleteTodoList?todoListId=' + id).then(res =>{
+      console.log('del', res)
+      let updtadedLists = [...this.state.lists];
+      updtadedLists = updtadedLists.filter(list => {
+      return list.id !== id;
+    });
+    this.setState({lists: updtadedLists});
+    });
+  }
+
+  createNewListHandler = () => {
+    let prevState = this.state.creatingList;
+    this.setState({creatingList: !prevState});
+  }
+
+  createNewListCancelledHandler = () => {
+    this.setState({creatingList: false});
   }
 
   render () {
 
-    let lists = this.state.lists.map((list) => {
-      return (
-        <List
-          key={list.id}
-          title={list.name}
-          clicked={() => this.listSelectHandler(list.id)} />
-      )
-    });
+    let lists = null;
+
+    if(this.state.lists.length === 0){
+     lists = <Spinner />
+    }
+    if(!this.state.loading){
+      
+      lists = this.state.lists.map(list =>{
+        return (
+          <List
+            key={list.id}
+            title={list.title}
+            clicked={() =>this.listSelectHandler(list.id)}
+            listDelete={() => this.listDeleteHandler(list.id)} />
+        );
+      });
+    }
+
+    let creator = null;
+    if(this.state.creatingList) {
+      creator = (
+        <ListCreator
+          listUpdate={this.listsUpdateHandler}
+          createListCancelled={this.createNewListCancelledHandler} />);
+    }
+
     return(
       <div className={styles.Lists}>
         {lists}
+        <NewList clicked={this.createNewListHandler} />
+        {creator}
       </div>
     );
   }

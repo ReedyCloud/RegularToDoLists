@@ -35,5 +35,20 @@
   &:hover{
     background-color: rgb(126, 219, 126);
   }
+}
 
+.btnCreateList {
+  font-size: 100%;
+  padding: 10px;
+  outline: none;
+  border: none;
+  cursor:  pointer;
+  width: 30%;
+  min-width: 90px;
+  border: 2px solid #aaa;
+  transition: all 200ms;
+
+  &:hover{
+    background-color: rgb(126, 219, 126);
+  }
 }
