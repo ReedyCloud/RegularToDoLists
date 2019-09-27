@@ -37,6 +37,22 @@
   }
 }
 
+.btnNewList {
+  font-size: 150%;
+  padding: 10px;
+  outline: none;
+  border: none;
+  cursor:  pointer;
+  width: 50%;
+  border: 2px solid #aaa;
+  transition: all 200ms;
+  color: rgb(97, 97, 97);
+
+  &:hover{
+    background-color: rgba(126, 219, 126, 0.781);
+  }
+}
+
 .btnCreateList {
   font-size: 100%;
   padding: 10px;

@@ -6,4 +6,10 @@
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  animation: enter 100ms linear;
+}
+
+@keyframes enter {
+  from { opacity: 0;}
+  to {opacity: 1;}
 }
