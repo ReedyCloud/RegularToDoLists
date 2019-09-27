@@ -5,14 +5,16 @@ import styles from './List.module.scss';
 
 class List extends React.Component {
 
-
+  componentDidMount = () => {
+    this.props.updateTaskNumbers();
+  }
   
   render () {
     return(
       <div className={styles.List}>
         <Button btnType={'btnDelete'} clicked={this.props.listDelete} > Delete </Button>
         <h2>{this.props.title}</h2>
-        <p>Zadania x/x</p>
+        <p>Zadania: {this.props.tasks}</p>
         <div>
         <Button btnType={'btnOpen'} clicked={this.props.clicked}> Open </Button>
         </div>

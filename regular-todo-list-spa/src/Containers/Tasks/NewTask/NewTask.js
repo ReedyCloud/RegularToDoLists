@@ -32,7 +32,6 @@ class NewTask extends React.Component {
     };
 
     axios.post('/AddTodoItem', data).then((res) => {
-      console.log(res);
       this.setState({name: '', description:'', priority: 1, creatingTask: false});
       this.props.tasksUpdate();
     });
