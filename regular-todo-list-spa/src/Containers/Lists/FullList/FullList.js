@@ -6,6 +6,7 @@ import axios from '../../../axios';
 import Task from '.././../Tasks/Task/Task';
 import NewTask from '../../Tasks/NewTask/NewTask';
 import styles from './FullList.module.scss';
+import ListState from '../List/ListState/ListState';
 
 class FullList extends React.Component {
 
@@ -133,36 +134,23 @@ class FullList extends React.Component {
       </div>
 
       <div className={styles.FullList}>
-        <div className={styles.ListState} 
-        onDragOver={(e) =>this.onDragOver(e)}
-        onDrop={(e) => {this.onDrop(e, 'toDo')}} >
-          <div>
-           <h3>To Do:</h3>
-          <NewTask listId={this.props.match.params.id} tasksUpdate={this.tasksUpdateHandler} />
-
-           {states.toDo}
-          </div>
-          
-        </div>
-
-        <div className={styles.ListState} 
-        onDragOver={(e) =>this.onDragOver(e)}
-        onDrop={(e) => {this.onDrop(e, 'workInProgress')}} >
-        <div  >
-           <h3>Work in Poggers:</h3>
-           {states.workInProgress}
-          </div>
-        </div>
-
-        <div className={styles.ListState} 
-        onDragOver={(e) =>this.onDragOver(e)}
-        onDrop={(e) => {this.onDrop(e, 'finished')}} >
-          <div>
-           <h3> Done:</h3>
-            {states.finished}
-          </div>
-        </div>
-
+        <ListState 
+          status='To Do:'
+          tasks={states.toDo}
+          onDragOver={(e) =>this.onDragOver(e)}
+          onDrop={(e) => {this.onDrop(e, 'toDo')}}>
+            <NewTask listId={this.props.match.params.id} tasksUpdate={this.tasksUpdateHandler} />
+        </ListState>
+        <ListState 
+          status='Work in Poggers:'
+          tasks={states.workInProgress}
+          onDragOver={(e) =>this.onDragOver(e)}
+          onDrop={(e) => {this.onDrop(e, 'workInProgress')}}/>
+        <ListState
+          status='Finished:'
+          tasks={states.finished}
+          onDragOver={(e) =>this.onDragOver(e)}
+          onDrop={(e) => {this.onDrop(e, 'finished')}}/>
       </div>
     </>
   );

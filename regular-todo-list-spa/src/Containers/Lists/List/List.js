@@ -14,7 +14,7 @@ class List extends React.Component {
       <div className={styles.List}>
         <Button btnType={'btnDelete'} clicked={this.props.listDelete} > Delete </Button>
         <h2>{this.props.title}</h2>
-        <p>Zadania: {this.props.tasks}</p>
+        <p>Tasks: <strong>{this.props.tasks}</strong></p>
         <div>
         <Button btnType={'btnOpen'} clicked={this.props.clicked}> Open </Button>
         </div>
