@@ -1,6 +1,6 @@
 .NewTask {
   margin: 10px auto;
-  border: 3px solid #777;
+  border: 1px solid #777;
   border-radius: 5px;
   // padding: 15px;
   width: 80%;
@@ -20,7 +20,7 @@
 }
 
 .NewTaskButtonOpened {
-  border-bottom:  3px solid #777;
+  border-bottom:  1px solid #777;
   background-color: #bbb;
   padding: 15px;
   transition: background-color 200ms ;
@@ -58,7 +58,7 @@
 
 .NewTaskButton {
   display: block;
-  border: 2px solid #aaa;
+  border: 1px solid #aaa;
   outline: none;
   cursor: pointer;
   margin: 10px auto;

@@ -6,6 +6,7 @@
   width: 80%;
   text-align: center;
   box-shadow: 2px 2px 10px rgb(156, 156, 156);
+  position: relative;
 }
 
 h2 {
@@ -23,4 +24,23 @@ p {
   background-color: rgba(221, 221, 221, 0.5);
   border-radius: 10px;
   word-wrap: break-word;
+}
+
+.TaskDeleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  outline:  none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 2px;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  border-bottom-left-radius: 5px;
+  transition: background-color 200ms ease-out;
+
+  &:hover {
+    background-color: rgb(241, 88, 88);
+  }
 }

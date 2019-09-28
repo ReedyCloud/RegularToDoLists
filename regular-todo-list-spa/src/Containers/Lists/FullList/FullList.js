@@ -17,6 +17,8 @@ class FullList extends React.Component {
 
   componentDidMount () {
     axios.get('GetTodoList?todoListId=' + this.props.match.params.id).then(response =>{
+      console.log(response);
+
       let fetchedTasks = [];
       fetchedTasks = (response.data.todoItems.map(task => {
         return {
@@ -105,9 +107,6 @@ class FullList extends React.Component {
   tasksUpdateHandler = () => {
     this.setState({loading: true});
   }
- 
- 
-
 
   render () {
 
@@ -120,10 +119,12 @@ class FullList extends React.Component {
     this.state.tasks.forEach(task => {
       states[task.status].push(
         <Task
+          updateTasks={this.tasksUpdateHandler}
           description={task.description}
           priority={task.priority}
           name={task.name}
-          onDragStart = {(e) => this.onDragStart(e, task.id)} />
+          onDragStart = {(e) => this.onDragStart(e, task.id)}
+          id={task.id}/>
       );
     });
 
