@@ -58,7 +58,7 @@ class Login extends React.Component {
           <input type="password" name="email" onChange={e => this.setState({password: e.target.value})} value={this.state.password} />
           <button> Login</button>
         </form>
-        <p>Already having an account? <span onClick={this.loginStateHandler}>Register here</span></p>
+        <p>Dont have an account <span onClick={this.loginStateHandler}>Register here</span></p>
 
       </div>
     );
@@ -74,7 +74,7 @@ class Login extends React.Component {
             <input type="password" name="email" onChange={e => this.setState({password: e.target.value})} value={this.state.password} />
             <button>Register me</button>
           </form>
-          <p>Dont have an account <span onClick={this.loginStateHandler}>Login here</span></p>
+          <p>Already having an account <span onClick={this.loginStateHandler}>Login here</span></p>
 
       </div>
       );
