@@ -1,78 +1,139 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using RegularTodoListAPI.DataContexts;
+using RegularTodoListAPI.Dtos;
+using RegularTodoListAPI.Models;
 
 namespace RegularTodoListAPI.Controllers
 {
     public class AuthController : ApiControllerBase
     {
-        // private readonly IAuthRepository _authRepository;
-        // private readonly IConfiguration _configuration;
-        // public AuthController(IAuthRepository authRepository, IConfiguration configuration)
-        // {
-        //     _configuration = configuration;
-        //     _authRepository = authRepository;
-        // }
+        private readonly IConfiguration _configuration;
+        private readonly DataContext _db;
 
-        // [HttpPost]
-        // public async Task<IActionResult> Register(PlayerFormDto playerFormDto)
-        // {
-        //     playerFormDto.Login = playerFormDto.Login.ToLower();
+        public AuthController(IConfiguration configuration, DataContext db)
+        {
+            _configuration = configuration;
+            _db = db;
+        }
 
-        //     if (await _authRepository.PlayerExists(playerFormDto.Login))
-        //         return BadRequest("Taki login już istnieje.");
+        [HttpPost]
+        public async Task<IActionResult> Register(UserFormDto userFormDto)
+        {
+            userFormDto.Email = userFormDto.Email.ToLower();
 
-        //     var userToCreate = new Player
-        //     {
-        //         Login = playerFormDto.Login,
-        //         Email = playerFormDto.Email,
-        //         Created = DateTime.Now
-        //     };
+            if (await _db.Users.AnyAsync(x => x.Email == userFormDto.Email))
+                return BadRequest("Taki email już istnieje.");
 
-        //     var createdUser = await _authRepository.Register(userToCreate, playerFormDto.Password);
+            var userToCreate = new User
+            {
+                Email = userFormDto.Email,
+                Created = DateTime.Now
+            };
 
-        //     return StatusCode(201);
-        // }
+            var createdUser = await RegisterInDb(userToCreate, userFormDto.Password);
 
-        // [HttpPost]
-        // public async Task<IActionResult> Login(PlayerFormDto playerFormDto)
-        // {
-        //     var userFromRepo = await _authRepository.Login(playerFormDto.Login.ToLower(), playerFormDto.Password);
+            return StatusCode(201);
+        }
 
-        //     if (userFromRepo == null)
-        //         return Unauthorized();
+        [HttpPost]
+        public async Task<IActionResult> Login(UserFormDto userFormDto)
+        {
+            var userFromRepo = await LoginInDb(userFormDto.Email.ToLower(), userFormDto.Password);
 
-        //     var claims = new[]
-        //     {
-        //         new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-        //         new Claim(ClaimTypes.Name, userFromRepo.Login)
-        //     };
+            if (userFromRepo == null)
+                return Unauthorized();
 
-        //     var key = new SymmetricSecurityKey(Encoding.UTF8
-        //         .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo.Email)
+            };
 
-        //     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
 
-        //     var tokenDescriptor = new SecurityTokenDescriptor
-        //     {
-        //         Subject = new ClaimsIdentity(claims),
-        //         Expires = DateTime.Now.AddDays(1),
-        //         SigningCredentials = creds
-        //     };
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        //     var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
 
-        //     var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-        //     return Ok(new 
-        //         { 
-        //             token = tokenHandler.WriteToken(token)
-        //         });
-        // }
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new 
+                { 
+                    token = tokenHandler.WriteToken(token)
+                });
+        }
+
+        #region Useful methods
+
+        private async Task<User> LoginInDb(string email, string password)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+                return null;
+
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                return null;
+
+            return user;
+        }
+
+        private async Task<User> RegisterInDb(User user, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _db.Users.AddAsync(user);
+            await _db.SaveChangesAsync();
+
+            return user;
+        }
+
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != passwordHash[i])
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
+            
+        #endregion
     }
 }

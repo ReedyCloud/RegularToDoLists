@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RegularTodoListAPI.DataContexts;
@@ -11,17 +13,23 @@ using RegularTodoListAPI.Models;
 
 namespace RegularTodoListAPI.Controllers
 {
+    [Authorize]
     public class TodoController : ApiControllerBase
     {
         #region Consts, readonly, ctors
             
         private readonly DataContext _db;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public TodoController(DataContext db, IMapper mapper)
+        private readonly int _userId;
+
+        public TodoController(DataContext db, IMapper mapper, IHttpContextAccessor httpContext)
         {
             _db = db;
             _mapper = mapper;
+            _httpContext = httpContext;
+            _userId = _db.Users.First(x => x.Email.ToLower() == httpContext.HttpContext.User.Identity.Name).Id;
         }
 
         #endregion
@@ -31,7 +39,7 @@ namespace RegularTodoListAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTodoLists()
         {
-            var todoLists = await _db.TodoLists.Where(x => x.UserId == 1).ToListAsync();
+            var todoLists = await _db.TodoLists.Where(x => x.UserId == _userId).ToListAsync();
 
             var res = new List<TodoListDto>();
             foreach (var todoList in todoLists)
@@ -69,7 +77,7 @@ namespace RegularTodoListAPI.Controllers
         public async Task<IActionResult> AddTodoList([FromBody] TodoListDto todoListDto)
         {
             var todoList = _mapper.Map<TodoList>(todoListDto);
-            todoList.UserId = 1;
+            todoList.UserId = _userId;
 
             await _db.TodoLists.AddAsync(todoList);
             await _db.SaveChangesAsync();
