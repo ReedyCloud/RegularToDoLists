@@ -1,0 +1,54 @@
+.Container {
+  display: flex;
+  justify-content: center;
+}
+
+
+.Form {
+  text-align: center;
+  min-width: 350px;
+  background-color: #fff;
+  border: 1px solid rgb(82, 82, 82);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 10%;
+  box-shadow: 5px 5px 10px #aaa;
+  & > div{
+    margin: 0.5em 0;
+    font-size: 30px;
+    text-align: center;
+  }
+  & > form{
+    text-align: center;
+    label,
+    input {
+      margin: 0 auto;
+      display: block;
+    }
+
+    label {
+      padding: 5px;
+    }
+    button {
+      outline: none;
+      cursor: pointer;
+      border: 1px solid #565656;
+      margin: 10px;
+      padding: 5px 10px;
+      transition: background-color 200ms;
+      &:hover {
+        background-color: rgb(133, 238, 238);
+      }
+    }
+  }
+  & > p{
+    background-color: transparent;
+  }
+
+  & > p > span {
+      text-decoration: underline;
+      cursor: pointer;
+      &:hover {
+        color: purple;
+  }}
+}

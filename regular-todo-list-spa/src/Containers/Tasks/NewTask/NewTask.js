@@ -2,6 +2,7 @@ import React from 'react';
 
 import axios from '../../../axios';
 import styles from './NewTask.module.scss';
+import {getJwt} from '../../Auth/helpers/jwt';
 
 class NewTask extends React.Component {
   
@@ -23,6 +24,7 @@ class NewTask extends React.Component {
     this.setState({creatingTask: !prevState});
   }
   postTaskHandler = () => {
+    const jwt = getJwt();
     const data = {
       TodoListId: this.state.toDoListId,
       Name: this.state.name,
@@ -31,7 +33,7 @@ class NewTask extends React.Component {
       Status: this.state.state
     };
 
-    axios.post('/AddTodoItem', data).then((res) => {
+    axios.post('todo/AddTodoItem', data, {headers: {Authorization: `Bearer ${jwt}`}}).then((res) => {
       this.setState({name: '', description:'', priority: 1, creatingTask: false});
       this.props.tasksUpdate();
     });

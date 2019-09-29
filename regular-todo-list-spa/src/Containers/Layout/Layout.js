@@ -5,16 +5,24 @@ import FullList from '../Lists/FullList/FullList';
 import Toolbar from '../../Components/Navigation/Toolbar/Toolbar';
 import Lists  from '../Lists/Lists';
 import UserSettings from '../../Components/UserSettings/UserSettings.js';
+import Login from '../Auth/Login/Login';
+import AuthComponent from '../Auth/AuthComponent';
+import Logout from '../Auth/Logout/Logout';
 
 class Layout extends React.Component {
   render () {
     return(
       <>
-      <Toolbar />
+      {/*  */}
       <Switch>
-        <Route path="/settings" component={UserSettings} />
-        <Route path="/lists" exact component={Lists} />
-        <Route path="/lists/:id/:title" exact component={FullList} />
+        <Route path="/" exact component={Login} />
+        <Route path="/logged"  component={AuthComponent} >
+        <Toolbar />
+        <Route path="/logged/settings" component={UserSettings} />
+        <Route path="/logged/logout" component={Logout} />
+        <Route path="/logged/lists" exact component={Lists} />
+        <Route path="/logged/lists/:id/:title" exact component={FullList} />
+        </Route>
       </Switch>
       </>
     );

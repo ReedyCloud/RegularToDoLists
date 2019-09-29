@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
 
-import Spinner from '../../../Components/UI/Spinner/Spinner';
+import {getJwt} from '../../Auth/helpers/jwt';
 import axios from '../../../axios';
 import Task from '.././../Tasks/Task/Task';
 import NewTask from '../../Tasks/NewTask/NewTask';
@@ -16,7 +16,8 @@ class FullList extends React.Component {
   }
 
   componentDidMount () {
-    axios.get('GetTodoList?todoListId=' + this.props.match.params.id).then(response =>{
+    const jwt = getJwt();
+    axios.get('todo/GetTodoList?todoListId=' + this.props.match.params.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(response =>{
       console.log(response);
 
       let fetchedTasks = [];
@@ -47,8 +48,9 @@ class FullList extends React.Component {
   }
 
   componentDidUpdate = () => {
+    const jwt = getJwt();
     if(this.state.loading){
-      axios.get('GetTodoList?todoListId=' + this.props.match.params.id).then(response =>{
+      axios.get('todo/GetTodoList?todoListId=' + this.props.match.params.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(response =>{
         let fetchedTasks = [];
         fetchedTasks = (response.data.todoItems.map(task => {
           return {
@@ -86,6 +88,8 @@ class FullList extends React.Component {
   }
 
   onDrop = (ev, cat) => {
+    const jwt = getJwt();
+
     const xd = {
       toDo: 0,
       workInProgress: 1,
@@ -96,7 +100,7 @@ class FullList extends React.Component {
     let tasks = this.state.tasks.filter((task) => {
       if(task.id == id) {
         task.status = cat;
-        axios.put('ChangeStatus?todoItemId='+ task.id +'&status=' + xd[task.status]);
+        axios.put('todo/ChangeStatus?todoItemId='+ task.id +'&status=' + xd[task.status],null, {headers: {Authorization: `Bearer ${jwt}`}});
       }
       return task;
     });

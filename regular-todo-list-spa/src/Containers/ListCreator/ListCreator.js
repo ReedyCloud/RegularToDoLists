@@ -4,6 +4,7 @@ import axios from '../../axios';
 import styles from './ListCreator.module.scss';
 import Backdrop from '../../Components/UI/Backdrop/Backdrop';
 import Button from '../../Components/UI/Button/Button';
+import {getJwt} from '../Auth/helpers/jwt';
 
 class ListCreator extends React.Component {
 
@@ -12,11 +13,12 @@ class ListCreator extends React.Component {
   }
 
   postListHandler = () => {
+    const jwt = getJwt();
     const data = {
-      title: this.state.title
+      title: this.state.title,
     };
 
-    axios.post('/AddTodoList', data).then(() => {
+    axios.post('todo/AddTodoList', data, {headers: {Authorization: `Bearer ${jwt}`}}).then(() => {
       this.props.listUpdate();
     });
   }

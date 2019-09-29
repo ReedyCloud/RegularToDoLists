@@ -6,6 +6,7 @@ import Spinner from '../../Components/UI/Spinner/Spinner';
 import styles from './Lists.module.scss';
 import axios from '../../axios';
 import ListCreator from '../ListCreator/ListCreator';
+import {getJwt} from '../Auth/helpers/jwt';
 
 class Lists extends React.Component {
 
@@ -13,48 +14,50 @@ class Lists extends React.Component {
     lists: [],
     creatingList: false,
     loading: true,
-    tasks: []
   }
 
   componentDidMount () {
-    axios.get('GetTodoLists').then((response) =>{
+    const jwt = getJwt();
+    axios.get('todo/GetTodoLists', {headers: {Authorization: `Bearer ${jwt}`}}).then((response) =>{
       let fetchedLists = [];
       fetchedLists = (response.data.map(res => {
         return {id: res.id, title: res.title, status:res.status}
       }));
-      this.setState({lists: fetchedLists, loading: false});
-      
-    });
+      this.setState({lists: fetchedLists});
+    })
+    // .then(()=>{
+    //   let fetchedTasks = [];
+    //     this.state.lists.forEach(list => {
+    //       axios.get('todo/GetTodoList?todoListId='+ list.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res => {
+    //         fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
+    //       });
+    //     });
+    //     this.setState({tasks:fetchedTasks, loading: false});
+    // });
 }
   componentDidUpdate =  () => {
+    const jwt = getJwt();
       if(this.state.loading){
-        axios.get('GetTodoLists').then((response) =>{
+        axios.get('todo/GetTodoLists', {headers: {Authorization: `Bearer ${jwt}`}}).then((response) =>{
           let fetchedLists= [];
           fetchedLists = (response.data.map(res => {
             return {id: res.id, title: res.title, status:res.status}
         }));
         this.setState({lists: fetchedLists, loading: false});
-        let fetchedTasks = [];
-        fetchedLists.forEach(list => {
-          axios.get('GetTodoList?todoListId='+ list.id).then(res => {
-            fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
-          });
-        });
-        this.setState({tasks:fetchedTasks});
       });
     }
   }
 
-  tasksNumberUpdateHandler = () => {
-    let fetchedTasks = [];
-    this.state.lists.forEach(list => {
-      axios.get('GetTodoList?todoListId='+ list.id).then(res => {
-        fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
-        this.setState({tasks:fetchedTasks});
-      });
-    });
-  }
-
+  // tasksNumberUpdateHandler = () => {
+  //   const jwt = getJwt();
+  //   let fetchedTasks = [];
+  //   this.state.lists.forEach(list => {
+  //     axios.get('todo/GetTodoList?todoListId='+ list.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res => {
+  //       fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
+  //       this.setState({tasks:fetchedTasks, loading: false});
+  //     });
+  //   });
+  // }
 
   listsUpdateHandler = () => {
     this.setState({loading: true, creatingList: false});
@@ -65,7 +68,8 @@ class Lists extends React.Component {
   }
 
   listDeleteHandler = (id) => {
-    axios.delete('/DeleteTodoList?todoListId=' + id).then(res =>{
+    const jwt = getJwt();
+    axios.delete('todo/DeleteTodoList?todoListId=' + id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res =>{
       let updtadedLists = [...this.state.lists];
       updtadedLists = updtadedLists.filter(list => {
       return list.id !== id;
@@ -92,21 +96,13 @@ class Lists extends React.Component {
     if(!this.state.loading){
       lists = this.state.lists.map(list =>{
 
-        let tasksNumber =  null;
-        this.state.tasks.forEach(task =>{
-          if(task.id === list.id){
-            tasksNumber = task.tasks;
-          }
-        });
-
         return (
           <List
             key={list.id}
             title={list.title}
             clicked={() =>this.listSelectHandler(list.id, list.title)}
             listDelete={() => this.listDeleteHandler(list.id)}
-            updateTaskNumbers={this.tasksNumberUpdateHandler}
-            tasks={tasksNumber}  />
+              />
         );
       });
     }
@@ -119,10 +115,15 @@ class Lists extends React.Component {
           createListCancelled={this.createNewListCancelledHandler} />);
     }
 
+    let newList = null;
+    if(!this.state.loading) {
+      newList = <NewList clicked={this.createNewListHandler} />;
+    }
+
     return(
       <div className={styles.Lists}>
         {lists}
-        <NewList clicked={this.createNewListHandler} />
+        {newList}
         {creator}
       </div>
     );

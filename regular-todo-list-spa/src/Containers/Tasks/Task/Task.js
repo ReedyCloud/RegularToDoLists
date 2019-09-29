@@ -3,6 +3,7 @@ import React from 'react';
 import axios from '../../../axios';
 import X from '../../../Components/UI/X/X';
 import styles from './Task.module.scss';
+import {getJwt} from '../../Auth/helpers/jwt';
 
 const taskStatus = {
   TODO: 0,
@@ -27,7 +28,8 @@ class Task extends React.Component {
 
 
   taskDeleteHandler = (id) => {
-    axios.delete('/DeleteTodoItem?todoItemId=' + id).then(res=>{
+    const jwt = getJwt();
+    axios.delete('todo/DeleteTodoItem?todoItemId=' + id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res=>{
       this.props.updateTasks();
     });
   }
