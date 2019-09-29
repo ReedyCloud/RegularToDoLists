@@ -17,14 +17,10 @@ class ListCreator extends React.Component {
     };
 
     axios.post('/AddTodoList', data).then(() => {
-      this.updateLists();
+      this.props.listUpdate();
     });
   }
   
- updateLists = () => {
-   this.props.listUpdate();
- }
-
   render () {
     return(
       <>

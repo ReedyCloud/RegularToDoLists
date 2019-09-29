@@ -1,5 +1,7 @@
 import React from 'react';
 
+import axios from '../../../axios';
+import X from '../../../Components/UI/X/X';
 import styles from './Task.module.scss';
 
 const taskStatus = {
@@ -19,11 +21,16 @@ class Task extends React.Component {
     state: 0
   }
 
-  
   static getDerivedStateFromProps(props, state) {
-    return {...state, priority: props.priority}
+    return {...state, priority: props.priority, id: props.id}
   }
 
+
+  taskDeleteHandler = (id) => {
+    axios.delete('/DeleteTodoItem?todoItemId=' + id).then(res=>{
+      this.props.updateTasks();
+    });
+  }
 
   render () {
 
@@ -33,11 +40,12 @@ class Task extends React.Component {
       draggable
       className={styles.Task}
       style={{backgroundColor:'rgb(255,'+ (255 - 10.5 * this.state.priority)+ ',' + (255 - 25.5 * this.state.priority)+  ')' }}>
+        <button className={styles.TaskDeleteButton} onClick={() => this.taskDeleteHandler(this.state.id)} ><X /></button>
       <h2> {this.props.name}</h2>
       <p>
         {this.props.description}
       </p>
-
+    
     </div>
   );
   }

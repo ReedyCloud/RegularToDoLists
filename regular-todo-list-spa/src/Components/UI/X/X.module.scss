@@ -1,0 +1,21 @@
+.Xx {
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.Line1,
+.Line2 {
+  position: absolute;
+  background-color: black;
+  width: 100%;
+  height: 10%;
+  top: 50%;
+}
+
+.Line1 {
+  transform: rotate(45deg);
+}
+.Line2 {
+  transform: rotate(-45deg);
+}

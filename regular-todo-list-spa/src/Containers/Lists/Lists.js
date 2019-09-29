@@ -12,7 +12,8 @@ class Lists extends React.Component {
   state = {
     lists: [],
     creatingList: false,
-    loading: true
+    loading: true,
+    tasks: []
   }
 
   componentDidMount () {
@@ -22,10 +23,10 @@ class Lists extends React.Component {
         return {id: res.id, title: res.title, status:res.status}
       }));
       this.setState({lists: fetchedLists, loading: false});
+      
     });
 }
   componentDidUpdate =  () => {
-    
       if(this.state.loading){
         axios.get('GetTodoLists').then((response) =>{
           let fetchedLists= [];
@@ -33,8 +34,25 @@ class Lists extends React.Component {
             return {id: res.id, title: res.title, status:res.status}
         }));
         this.setState({lists: fetchedLists, loading: false});
+        let fetchedTasks = [];
+        fetchedLists.forEach(list => {
+          axios.get('GetTodoList?todoListId='+ list.id).then(res => {
+            fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
+          });
+        });
+        this.setState({tasks:fetchedTasks});
       });
     }
+  }
+
+  tasksNumberUpdateHandler = () => {
+    let fetchedTasks = [];
+    this.state.lists.forEach(list => {
+      axios.get('GetTodoList?todoListId='+ list.id).then(res => {
+        fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
+        this.setState({tasks:fetchedTasks});
+      });
+    });
   }
 
 
@@ -48,7 +66,6 @@ class Lists extends React.Component {
 
   listDeleteHandler = (id) => {
     axios.delete('/DeleteTodoList?todoListId=' + id).then(res =>{
-      console.log('del', res)
       let updtadedLists = [...this.state.lists];
       updtadedLists = updtadedLists.filter(list => {
       return list.id !== id;
@@ -68,18 +85,28 @@ class Lists extends React.Component {
 
   render () {
 
-    let lists = null;
+    let lists = 0;
     if(this.state.lists.length === 0){
      lists = <Spinner />
     }
     if(!this.state.loading){
       lists = this.state.lists.map(list =>{
+
+        let tasksNumber =  null;
+        this.state.tasks.forEach(task =>{
+          if(task.id === list.id){
+            tasksNumber = task.tasks;
+          }
+        });
+
         return (
           <List
             key={list.id}
             title={list.title}
             clicked={() =>this.listSelectHandler(list.id, list.title)}
-            listDelete={() => this.listDeleteHandler(list.id)} />
+            listDelete={() => this.listDeleteHandler(list.id)}
+            updateTaskNumbers={this.tasksNumberUpdateHandler}
+            tasks={tasksNumber}  />
         );
       });
     }

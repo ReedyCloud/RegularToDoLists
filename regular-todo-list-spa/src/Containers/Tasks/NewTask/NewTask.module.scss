@@ -1,15 +1,73 @@
 .NewTask {
   margin: 10px auto;
-  border: 3px solid #777;
+  border: 1px solid #777;
   border-radius: 5px;
-  padding: 15px;
+  // padding: 15px;
   width: 80%;
   text-align: center;
   cursor: pointer;
+}
 
+.NewTaskButtonClosed {
+  // border-bottom:  3px solid transparent;
+  background-color: #bbb;
+  padding: 15px;
+  transition: background-color 200ms ;
+
+  &:hover{
+    background-color: #ddd;
+  }
+}
+
+.NewTaskButtonOpened {
+  border-bottom:  1px solid #777;
+  background-color: #bbb;
+  padding: 15px;
+  transition: background-color 200ms ;
+
+  &:hover{
+    background-color: #ddd;
+  }
 }
 
 .NewTaskCreator {
+  padding-top: 15px;
+  text-align: left;
+  cursor: auto;
+
+  input[type=text], 
+  textarea {
+    width: 60%;
+    display: block;
+    margin: 5px auto;
+    padding: 3px 5px;
+    font-size: 15px;
+
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  h4 {
+    margin-left: 20%;
+    font-weight: 400;
+    font-size: 1.3rem;
+  }
 }
 
+.NewTaskButton {
+  display: block;
+  border: 1px solid #aaa;
+  outline: none;
+  cursor: pointer;
+  margin: 10px auto;
+  padding: 10px 20px;
+  font-size: 20px;
+  transition: all 200ms;
+
+  &:hover {
+    background-color: #fff;
+  }
+}
 
