@@ -38,7 +38,7 @@ class Login extends React.Component {
     axios.post('auth/register', {
       email: this.state.email,
       password: this.state.password
-    }).catch(err => alert('uzytkownik juz istnieje') );
+    }).then(()=> this.setState({login: true})).catch(err => alert('uzytkownik juz istnieje') );
   }
 
   loginStateHandler = () => {
