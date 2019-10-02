@@ -1,6 +1,6 @@
 import React from 'react';
 
-import axios from '../../axios';
+import axios from '../../Axios/axios';
 import styles from './ListCreator.module.scss';
 import Backdrop from '../../Components/UI/Backdrop/Backdrop';
 import Button from '../../Components/UI/Button/Button';

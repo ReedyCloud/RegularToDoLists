@@ -1,6 +1,6 @@
 import React from 'react';
 
-import axios from '../../../axios';
+import axios from '../../../Axios/axios';
 import styles from './NewTask.module.scss';
 import {getJwt} from '../../Auth/helpers/jwt';
 

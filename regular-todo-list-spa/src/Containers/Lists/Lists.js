@@ -4,7 +4,7 @@ import NewList from '../../Components/UI/NewList/NewList';
 import List from './List/List';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 import styles from './Lists.module.scss';
-import axios from '../../axios';
+import axios from '../../Axios/axios';
 import ListCreator from '../ListCreator/ListCreator';
 import {getJwt} from '../Auth/helpers/jwt';
 
@@ -25,15 +25,6 @@ class Lists extends React.Component {
       }));
       this.setState({lists: fetchedLists});
     })
-    // .then(()=>{
-    //   let fetchedTasks = [];
-    //     this.state.lists.forEach(list => {
-    //       axios.get('todo/GetTodoList?todoListId='+ list.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res => {
-    //         fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
-    //       });
-    //     });
-    //     this.setState({tasks:fetchedTasks, loading: false});
-    // });
 }
   componentDidUpdate =  () => {
     const jwt = getJwt();
@@ -47,17 +38,6 @@ class Lists extends React.Component {
       });
     }
   }
-
-  // tasksNumberUpdateHandler = () => {
-  //   const jwt = getJwt();
-  //   let fetchedTasks = [];
-  //   this.state.lists.forEach(list => {
-  //     axios.get('todo/GetTodoList?todoListId='+ list.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res => {
-  //       fetchedTasks.push({id: list.id, tasks: res.data.todoItems.length});
-  //       this.setState({tasks:fetchedTasks, loading: false});
-  //     });
-  //   });
-  // }
 
   listsUpdateHandler = () => {
     this.setState({loading: true, creatingList: false});

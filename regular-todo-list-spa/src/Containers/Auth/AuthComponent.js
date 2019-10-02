@@ -1,6 +1,6 @@
 import React from 'react';
 import { getJwt } from './helpers/jwt';
-import axios from '../../axios';
+import axios from '../../Axios/axios';
 
 class AuthComponent extends React.Component {
 

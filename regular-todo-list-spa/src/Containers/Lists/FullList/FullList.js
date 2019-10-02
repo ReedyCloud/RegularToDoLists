@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 
 import {getJwt} from '../../Auth/helpers/jwt';
-import axios from '../../../axios';
+import axios from '../../../Axios/axios';
 import Task from '.././../Tasks/Task/Task';
 import NewTask from '../../Tasks/NewTask/NewTask';
 import styles from './FullList.module.scss';

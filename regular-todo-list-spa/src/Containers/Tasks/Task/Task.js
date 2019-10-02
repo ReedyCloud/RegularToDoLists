@@ -1,6 +1,6 @@
 import React from 'react';
 
-import axios from '../../../axios';
+import axios from '../../../Axios/axios';
 import X from '../../../Components/UI/X/X';
 import styles from './Task.module.scss';
 import {getJwt} from '../../Auth/helpers/jwt';

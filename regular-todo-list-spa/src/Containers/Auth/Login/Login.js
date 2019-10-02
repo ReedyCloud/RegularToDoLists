@@ -1,6 +1,5 @@
 import React from 'react';
-import axios from '../../../axios';
-
+import {login, register}  from '../../../Axios/Auth/Authorization';
 import styles from './Login.module.scss';
 
 class Login extends React.Component {
@@ -13,32 +12,12 @@ class Login extends React.Component {
 
   loginHandler = (e) =>{
     e.preventDefault();
-    axios.post('auth/login', {
-      email: this.state.email,
-      password: this.state.password
-    }).then(res => {
-        localStorage.setItem('jwt', res.data.token);
-        this.props.history.push('/logged/lists');
-      }).catch(err =>{
-        switch (err.response.data.status) {
-          case 400:
-            alert('uzupelnij dane');
-            break;
-          case 401:
-            alert('bledny login lub haslo');
-            break;
-        
-          default:
-            break;
-        }
-      });
+    login(this.state.email, this.state.password,this.props);
   }
   registerHandler = (e) =>{
     e.preventDefault();
-    axios.post('auth/register', {
-      email: this.state.email,
-      password: this.state.password
-    }).then(()=> this.setState({login: true})).catch(err => alert('uzytkownik juz istnieje') );
+    register(this.state.email, this.state.password);
+    this.setState({login: true});
   }
 
   loginStateHandler = () => {
@@ -55,7 +34,7 @@ class Login extends React.Component {
           <label>email</label>
           <input type="text" name="email" onChange={e => this.setState({email: e.target.value})} value={this.state.email} />
           <label>password</label>
-          <input type="password" name="email" onChange={e => this.setState({password: e.target.value})} value={this.state.password} />
+          <input type="password" name="email" onChange={ e => this.setState({password: e.target.value})} value={this.state.password} />
           <button> Login</button>
         </form>
         <p>Dont have an account <span onClick={this.loginStateHandler}>Register here</span></p>
@@ -87,5 +66,7 @@ class Login extends React.Component {
   );
   }
 };
+
+
 
 export default Login;
