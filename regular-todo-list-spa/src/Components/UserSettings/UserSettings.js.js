@@ -2,8 +2,8 @@ import React from 'react';
 
 const userSettings = (props) => {
   return(
-    <div>
-      xd
+    <div style={{paddingTop:'300px', textAlign: 'center'}}>
+      Work in Progrss
     </div>
   );
 };
