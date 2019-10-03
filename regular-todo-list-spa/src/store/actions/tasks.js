@@ -2,8 +2,6 @@ import * as actionTypes from './actionTypes';
 import axios from '../../Axios/axios';
 import {getJwt} from '../../Containers/Auth/helpers/jwt';
 
-const jwt = getJwt();
-
 export const setTasks = (tasks) => {
   return {
     type: actionTypes.GET_TASKS,
@@ -13,6 +11,7 @@ export const setTasks = (tasks) => {
 
 export const getTasks = (id) => {
   return dispatch => {
+    const jwt = getJwt();
     axios.get('todo/GetTodoList?todoListId=' + id, {
       headers: {
         Authorization: `Bearer ${jwt}`
@@ -57,6 +56,7 @@ export const updateTasks = () => {
 
 export const deleteTask = (id) => {
   return dispatch => {
+    const jwt = getJwt();
     axios.delete('todo/DeleteTodoItem?todoItemId=' + id, {
       headers: {
         Authorization: `Bearer ${jwt}`
@@ -69,6 +69,7 @@ export const deleteTask = (id) => {
 
 export const createTask = (data) => {
   return dispatch => {
+    const jwt = getJwt();
     axios.post('todo/AddTodoItem', data, {
       headers: {
         Authorization: `Bearer ${jwt}`
