@@ -1,15 +1,9 @@
 import React from 'react';
+import {connect} from 'react-redux'
 
-import axios from '../../../Axios/axios';
 import X from '../../../Components/UI/X/X';
 import styles from './Task.module.scss';
-import {getJwt} from '../../Auth/helpers/jwt';
-
-const taskStatus = {
-  TODO: 0,
-  WORK_IN_PROGRESS: 1,
-  FINISHED: 2
-}
+import * as actions from '../../../store/actions/index';
 
 class Task extends React.Component {
 
@@ -26,14 +20,6 @@ class Task extends React.Component {
     return {...state, priority: props.priority, id: props.id}
   }
 
-
-  taskDeleteHandler = (id) => {
-    const jwt = getJwt();
-    axios.delete('todo/DeleteTodoItem?todoItemId=' + id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res=>{
-      this.props.updateTasks();
-    });
-  }
-
   render () {
 
   return(
@@ -42,7 +28,7 @@ class Task extends React.Component {
       draggable
       className={styles.Task}
       style={{backgroundColor:'rgb(255,'+ (255 - 10.5 * this.state.priority)+ ',' + (255 - 25.5 * this.state.priority)+  ')' }}>
-        <button className={styles.TaskDeleteButton} onClick={() => this.taskDeleteHandler(this.state.id)} ><X /></button>
+        <button className={styles.TaskDeleteButton} onClick={() => this.props.onTaskDelete(this.state.id)} ><X /></button>
       <h2> {this.props.name}</h2>
       <p>
         {this.props.description}
@@ -53,4 +39,11 @@ class Task extends React.Component {
   }
 };
 
-export default Task;
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onTaskDelete: (id) => dispatch(actions.deleteTask(id))
+  };
+}
+
+export default connect(null, mapDispatchToProps)(Task);

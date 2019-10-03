@@ -1,103 +1,56 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
+import * as actions from '../../store/actions/index';
 import NewList from '../../Components/UI/NewList/NewList';
 import List from './List/List';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 import styles from './Lists.module.scss';
-import axios from '../../Axios/axios';
 import ListCreator from '../ListCreator/ListCreator';
-import {getJwt} from '../Auth/helpers/jwt';
 
 class Lists extends React.Component {
 
-  state = {
-    lists: [],
-    creatingList: false,
-    loading: true,
-  }
-
   componentDidMount () {
-    const jwt = getJwt();
-    axios.get('todo/GetTodoLists', {headers: {Authorization: `Bearer ${jwt}`}}).then((response) =>{
-      let fetchedLists = [];
-      fetchedLists = (response.data.map(res => {
-        return {id: res.id, title: res.title, status:res.status}
-      }));
-      this.setState({lists: fetchedLists});
-    })
+    this.props.onGetLists();
 }
-  componentDidUpdate =  () => {
-    const jwt = getJwt();
-      if(this.state.loading){
-        axios.get('todo/GetTodoLists', {headers: {Authorization: `Bearer ${jwt}`}}).then((response) =>{
-          let fetchedLists= [];
-          fetchedLists = (response.data.map(res => {
-            return {id: res.id, title: res.title, status:res.status}
-        }));
-        this.setState({lists: fetchedLists, loading: false});
-      });
+  componentDidUpdate = () => {
+      if(this.props.loading){
+        this.props.onGetLists();
     }
   }
 
-  listsUpdateHandler = () => {
-    this.setState({loading: true, creatingList: false});
-  }
-
   listSelectHandler = (id, title) => {
-    this.props.history.push({pathname:'lists/'+ id + '/' +title});
-  }
-
-  listDeleteHandler = (id) => {
-    const jwt = getJwt();
-    axios.delete('todo/DeleteTodoList?todoListId=' + id, {headers: {Authorization: `Bearer ${jwt}`}}).then(res =>{
-      let updtadedLists = [...this.state.lists];
-      updtadedLists = updtadedLists.filter(list => {
-      return list.id !== id;
-    });
-    this.setState({lists: updtadedLists});
-    });
-  }
-
-  createNewListHandler = () => {
-    let prevState = this.state.creatingList;
-    this.setState({creatingList: !prevState});
-  }
-
-  createNewListCancelledHandler = () => {
-    this.setState({creatingList: false});
+    this.props.history.push({pathname:'lists/'+ id + '/' + title});
   }
 
   render () {
 
-    let lists = 0;
-    if(this.state.lists.length === 0){
+    let lists = null;
+    if(this.props.lists.length === 0){
      lists = <Spinner />
     }
-    if(!this.state.loading){
-      lists = this.state.lists.map(list =>{
+    if(!this.props.loading){
+      lists = this.props.lists.map(list =>{
 
         return (
           <List
             key={list.id}
             title={list.title}
             clicked={() =>this.listSelectHandler(list.id, list.title)}
-            listDelete={() => this.listDeleteHandler(list.id)}
+            listDelete={() => this.props.onListDelete(list.id)}
               />
         );
       });
     }
 
     let creator = null;
-    if(this.state.creatingList) {
-      creator = (
-        <ListCreator
-          listUpdate={this.listsUpdateHandler}
-          createListCancelled={this.createNewListCancelledHandler} />);
+    if(this.props.creating) {
+      creator = <ListCreator />;
     }
 
     let newList = null;
-    if(!this.state.loading) {
-      newList = <NewList clicked={this.createNewListHandler} />;
+    if(!this.props.loading) {
+      newList = <NewList />;
     }
 
     return(
@@ -110,4 +63,19 @@ class Lists extends React.Component {
   }
 };
 
-export default Lists;
+const mapStateToProps = state => {
+  return {
+    lists: state.lists.lists,
+    creating: state.lists.creating,
+    loading: state.lists.loading,
+  };
+};
+
+const mapDistpatchToProps = dispatch => {
+  return {
+    onGetLists: () => dispatch(actions.getLists()),
+    onListDelete: (id) => dispatch(actions.listDeleted(id))
+  };
+};
+
+export default connect(mapStateToProps, mapDistpatchToProps )(Lists);

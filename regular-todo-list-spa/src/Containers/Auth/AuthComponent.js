@@ -4,21 +4,12 @@ import axios from '../../Axios/axios';
 
 class AuthComponent extends React.Component {
 
-  state = {
-    user: undefined
-  }
-
   componentDidMount() {
     const jwt = getJwt();
     if(!jwt) {
       this.props.history.push('/');
     }
-    axios.get('/getUser', {headers:{Authorization: `Bearer ${jwt}`}}).then( res => {
-      console.log(res);
-      this.setState({
-        user: res.data
-      });
-    });
+    axios.get('/getUser', {headers:{Authorization: `Bearer ${jwt}`}});
 
   }
 

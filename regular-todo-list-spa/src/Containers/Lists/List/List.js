@@ -5,10 +5,6 @@ import styles from './List.module.scss';
 
 class List extends React.Component {
 
-  componentDidMount = () => {
-    // this.props.updateTaskNumbers();
-  }
-  
   render () {
     return(
       <div className={styles.List}>

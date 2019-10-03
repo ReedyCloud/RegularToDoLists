@@ -1,8 +1,8 @@
 import React from 'react';
+import {connect} from 'react-redux'
 
-import axios from '../../../Axios/axios';
+import * as actions from '../../../store/actions/index';
 import styles from './NewTask.module.scss';
-import {getJwt} from '../../Auth/helpers/jwt';
 
 class NewTask extends React.Component {
   
@@ -23,8 +23,9 @@ class NewTask extends React.Component {
     let prevState = this.state.creatingTask;
     this.setState({creatingTask: !prevState});
   }
+
+
   postTaskHandler = () => {
-    const jwt = getJwt();
     const data = {
       TodoListId: this.state.toDoListId,
       Name: this.state.name,
@@ -32,11 +33,7 @@ class NewTask extends React.Component {
       Priority: this.state.priority,
       Status: this.state.state
     };
-
-    axios.post('todo/AddTodoItem', data, {headers: {Authorization: `Bearer ${jwt}`}}).then((res) => {
-      this.setState({name: '', description:'', priority: 1, creatingTask: false});
-      this.props.tasksUpdate();
-    });
+    this.props.onTaskCreated(data)
   }
 
   postTaskValidation = () => {
@@ -47,6 +44,7 @@ class NewTask extends React.Component {
 
     if( validate && Number.isInteger(parseInt(this.state.priority, 10))) {
       this.postTaskHandler();
+      this.setState({creatingTask: false, name: '', description:'', priority: 1})
     }
   }
 
@@ -85,4 +83,10 @@ class NewTask extends React.Component {
   }
 };
 
-export default NewTask;
+const mapDispatchToProps = dispatch => {
+  return {
+    onTaskCreated: (data) => dispatch(actions.createTask(data))
+  };
+}
+
+export default connect(null, mapDispatchToProps)(NewTask);

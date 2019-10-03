@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
+import {connect} from 'react-redux';
 
 import {getJwt} from '../../Auth/helpers/jwt';
 import axios from '../../../Axios/axios';
@@ -7,75 +8,18 @@ import Task from '.././../Tasks/Task/Task';
 import NewTask from '../../Tasks/NewTask/NewTask';
 import styles from './FullList.module.scss';
 import ListState from '../List/ListState/ListState';
+import * as actions from '../../../store/actions/index';
 
 class FullList extends React.Component {
 
-  state = {
-    tasks: [],
-    loading: true
-  }
 
   componentDidMount () {
-    const jwt = getJwt();
-    axios.get('todo/GetTodoList?todoListId=' + this.props.match.params.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(response =>{
-      console.log(response);
-
-      let fetchedTasks = [];
-      fetchedTasks = (response.data.todoItems.map(task => {
-        return {
-          id: task.id,
-          name: task.name,
-          description: task.description,
-          priority: task.priority,
-          status: task.status
-          }
-      }));
-      fetchedTasks.forEach(task => {
-        switch(task.status){
-          case 0:
-            task.status = 'toDo';
-            break;
-          case 1:
-            task.status = 'workInProgress';
-            break;
-          case 2:
-            task.status = 'finished';
-            break;
-        }
-      });
-      this.setState({tasks: fetchedTasks, loading: false});
-    });
+    this.props.onGetTasks(this.props.match.params.id);
   }
 
   componentDidUpdate = () => {
-    const jwt = getJwt();
-    if(this.state.loading){
-      axios.get('todo/GetTodoList?todoListId=' + this.props.match.params.id, {headers: {Authorization: `Bearer ${jwt}`}}).then(response =>{
-        let fetchedTasks = [];
-        fetchedTasks = (response.data.todoItems.map(task => {
-          return {
-            id: task.id,
-            name: task.name,
-            description: task.description,
-            priority: task.priority,
-            status: task.status
-            }
-        }));
-        fetchedTasks.forEach(task => {
-          switch(task.status){
-            case 0:
-              task.status = 'toDo';
-              break;
-            case 1:
-              task.status = 'workInProgress';
-              break;
-            case 2:
-              task.status = 'finished';
-              break;
-          }
-        });
-        this.setState({tasks: fetchedTasks, loading: false});
-      });
+    if(this.props.loading){
+      this.props.onGetTasks(this.props.match.params.id);
     }
   }
 
@@ -90,17 +34,17 @@ class FullList extends React.Component {
   onDrop = (ev, cat) => {
     const jwt = getJwt();
 
-    const xd = {
+    const taskState = {
       toDo: 0,
       workInProgress: 1,
       finished: 2
 
     }
     let id = ev.dataTransfer.getData('id');
-    let tasks = this.state.tasks.filter((task) => {
-      if(task.id == id) {
+    let tasks = this.props.tasks.filter((task) => {
+      if(task.id === Number.parseInt(id)) {
         task.status = cat;
-        axios.put('todo/ChangeStatus?todoItemId='+ task.id +'&status=' + xd[task.status],null, {headers: {Authorization: `Bearer ${jwt}`}});
+        axios.put('todo/ChangeStatus?todoItemId='+ task.id +'&status=' + taskState[task.status],null, {headers: {Authorization: `Bearer ${jwt}`}});
       }
       return task;
     });
@@ -120,7 +64,7 @@ class FullList extends React.Component {
       finished: []
     }
 
-    this.state.tasks.forEach(task => {
+    this.props.tasks.forEach(task => {
       states[task.status].push(
         <Task
           updateTasks={this.tasksUpdateHandler}
@@ -128,7 +72,8 @@ class FullList extends React.Component {
           priority={task.priority}
           name={task.name}
           onDragStart = {(e) => this.onDragStart(e, task.id)}
-          id={task.id}/>
+          id={task.id}
+          key={task.id}/>
       );
     });
 
@@ -162,4 +107,17 @@ class FullList extends React.Component {
   }
 };
 
-export default withRouter(FullList);
+const mapStateToProps = state => {
+  return {
+    tasks: state.tasks.tasks,
+    loading: state.tasks.loading
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onGetTasks: (id) => dispatch(actions.getTasks(id)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(FullList));

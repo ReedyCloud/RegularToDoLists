@@ -1,39 +1,24 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
-import axios from '../../Axios/axios';
+import * as actions from '../../store/actions/index';
 import styles from './ListCreator.module.scss';
 import Backdrop from '../../Components/UI/Backdrop/Backdrop';
 import Button from '../../Components/UI/Button/Button';
-import {getJwt} from '../Auth/helpers/jwt';
 
 class ListCreator extends React.Component {
-
-  state = {
-    title: ''
-  }
-
-  postListHandler = () => {
-    const jwt = getJwt();
-    const data = {
-      title: this.state.title,
-    };
-
-    axios.post('todo/AddTodoList', data, {headers: {Authorization: `Bearer ${jwt}`}}).then(() => {
-      this.props.listUpdate();
-    });
-  }
   
   render () {
     return(
       <>
-      <Backdrop clicked={this.props.createListCancelled} />
+      <Backdrop clicked={this.props.onListCreateCancel} />
       <div className={styles.ListCreator}>
         <h3>
           Name Me!  
         </h3> 
-          <input type='text' placeholder='my name' value={this.state.title}
-          onChange={(event)=> this.setState({title: event.target.value}) } required/>
-          <Button clicked={this.postListHandler} btnType={'btnCreateList'}>
+          <input type='text' placeholder='my name' value={this.props.title}
+          onChange={(e)=> this.props.onSetListTitle(e.target.value) } required/>
+          <Button  clicked={() => this.props.onListCreated(this.props.title)} btnType={'btnCreateList'}>
             Create
           </Button>
       </div>
@@ -42,4 +27,19 @@ class ListCreator extends React.Component {
   }
 };
 
-export default ListCreator;
+const mapStateToProps = state => {
+  return {
+    title: state.lists.title,
+    creating: state.lists.creating
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    onSetListTitle: (title) => dispatch(actions.setListTitle(title)),
+    onListCreateCancel: () => dispatch(actions.createListCancel()),
+    onListCreated: (title) => dispatch(actions.listCreated(title))
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListCreator);
