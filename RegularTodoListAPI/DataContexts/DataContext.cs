@@ -7,7 +7,7 @@ namespace RegularTodoListAPI.DataContexts
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Pooling=true;Database=regulartodolistdb;Username=postgres;Password=qwedsa12");
+            optionsBuilder.UseNpgsql("Host=postgres-rtl;Port=5432;Pooling=true;Database=regulartodolistdb;Username=postgres;Password=qwedsa12");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
