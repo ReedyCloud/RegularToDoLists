@@ -44,7 +44,11 @@ class FullList extends React.Component {
     let tasks = this.props.tasks.filter((task) => {
       if(task.id === Number.parseInt(id)) {
         task.status = cat;
-        axios.put('todo/ChangeStatus?todoItemId='+ task.id +'&status=' + taskState[task.status],null, {headers: {Authorization: `Bearer ${jwt}`}});
+        axios.put('todo/ChangeStatus?todoItemId='+ task.id +'&status=' + taskState[task.status], null, {
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          }
+        });
       }
       return task;
     });

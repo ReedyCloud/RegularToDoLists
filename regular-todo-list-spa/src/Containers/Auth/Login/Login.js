@@ -12,14 +12,14 @@ class Login extends React.Component {
       <div className={styles.Form}>
         <div>Login</div>
         <form onSubmit={ (e) => this.props.onLoginUser(e, this.props.email, this.props.password, this.props) }>
-          <label>email</label>
+          <label>email/login</label>
           <input type="text" name="email" onChange={e => this.props.onSetEmail(e.target.value)} value={this.props.email} />
           <label>password</label>
           <input type="password" name="email" onChange={ e => this.props.onSetPassword(e.target.value)} value={this.props.password} />
           <button>Login</button>
         </form>
         <p>Dont have an account <span onClick={this.props.onSetLogin}>Register here</span></p>
-
+        <div style={{fontSize: '13px'}}>for testing: login: demo, password: demo</div>
       </div>
     );
 
@@ -28,14 +28,14 @@ class Login extends React.Component {
         <div className={styles.Form}>
           <div>Register</div>
           <form onSubmit={ (e) => this.props.onRegisterUser(e, this.props.email, this.props.password) }>
-            <label>email</label>
+            <label>email/login</label>
             <input type="text" name="email" onChange={e => this.props.onSetEmail(e.target.value)} value={this.props.email} />
             <label>password</label>
             <input type="password" name="email" onChange={ e => this.props.onSetPassword(e.target.value)} value={this.props.password} />
             <button>Register</button>
         </form>
           <p>Already having an account <span onClick={this.props.onSetLogin}>Login here</span></p>
-
+          <div style={{fontSize: '13px'}}>for testing: login: demo, password: demo</div>
       </div>
       );
     }

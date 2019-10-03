@@ -3,7 +3,7 @@ import React from 'react';
 import NavigationItem from './NavigationItem/NavigationItem';
 import styles from './NavigationItems.module.scss';
 
-const navigationItems = (props) => {
+const navigationItems = () => {
   return(
     <nav className={styles.NavigationItems}>
       <NavigationItem link="/logged/lists" exact >Lists</NavigationItem>

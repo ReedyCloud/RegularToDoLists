@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './X.module.scss';
 
-const x = (props) => {
+const x = () => {
   return(
     <div className={styles.Xx}>
       <div className={styles.Line1}></div>
