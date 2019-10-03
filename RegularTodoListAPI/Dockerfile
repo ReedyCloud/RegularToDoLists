@@ -4,7 +4,6 @@ WORKDIR /app
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
-RUN dotnet ef database update
 
 # Copy everything else and build
 COPY . ./
