@@ -9,8 +9,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0"/>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0"/>
     <PackageReference Include="AutoMapper" Version="9.0.0"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../ApiCore/ApiCore.csproj"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4"/>
   </ItemGroup>
 </Project>
