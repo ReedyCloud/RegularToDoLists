@@ -37,15 +37,8 @@ class NewTask extends React.Component {
   }
 
   postTaskValidation = () => {
-    let validate = true;
-    if(this.state.name.length < 3) {
-      validate = false;
-    }
-
-    if( validate && Number.isInteger(parseInt(this.state.priority, 10))) {
       this.postTaskHandler();
       this.setState({creatingTask: false, name: '', description:'', priority: 1})
-    }
   }
 
 
@@ -70,8 +63,8 @@ class NewTask extends React.Component {
               <textarea type='text' placeholder='optional' value={this.state.description}
                 onChange={(event)=> this.setState({description: event.target.value}) } required/>
                 <h4>Priority:</h4>
-              <input type='text' placeholder='my prio' value={this.state.priority}
-                onChange={(event)=> this.setState({priority: event.target.value}) } required/>
+              <input type='number' placeholder='my prio' value={this.state.priority}
+                onChange={(event)=> this.setState({priority: event.target.value}) } required min='0' max='10'/>
                 <button onClick={this.postTaskValidation} className={styles.NewTaskButton} >
                   Create
                 </button>

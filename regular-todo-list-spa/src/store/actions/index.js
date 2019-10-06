@@ -1,9 +1,8 @@
 export {
-  setEmail,
-  setPassword,
   loginUser,
   setLogin,
-  registerUser
+  registerUser,
+  resetError
 } from './login';
 export {
   getLists,

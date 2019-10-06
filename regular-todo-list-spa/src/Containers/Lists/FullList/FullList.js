@@ -96,7 +96,7 @@ class FullList extends React.Component {
             <NewTask listId={this.props.match.params.id} tasksUpdate={this.tasksUpdateHandler} />
         </ListState>
         <ListState 
-          status='Work in Poggers:'
+          status='Work in Progress:'
           tasks={states.workInProgress}
           onDragOver={(e) =>this.onDragOver(e)}
           onDrop={(e) => {this.onDrop(e, 'workInProgress')}}/>

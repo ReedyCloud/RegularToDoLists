@@ -11,6 +11,10 @@ import ListCreator from '../ListCreator/ListCreator';
 class Lists extends React.Component {
 
   componentDidMount () {
+    if(!localStorage.getItem('jwt')){
+      this.props.history.push('/');
+    }
+
     this.props.onGetLists();
 }
   componentDidUpdate = () => {
