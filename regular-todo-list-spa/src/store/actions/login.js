@@ -21,25 +21,42 @@ export const setLogin=() => {
   };
 }
 
-export const loginUser = (e, email, password, props) => {
-  e.preventDefault();
-  return () => {
+export const loginUser = (email, password, props) => {
+  return dispatch => {
     axios.post('auth/login', {
       email: email,
       password: password
     }).then(res => {
       localStorage.setItem('jwt', res.data.token);
       props.history.push('/logged/lists');
+    }).catch((res) => {
+      dispatch(setError(res.response.status))
     });
   }
 }
 
-export const registerUser = (e, email, password) => {
-  e.preventDefault();
-  return () => {
+export const setError = (err) => {
+  return {
+    type: actionTypes.SET_ERROR,
+    val: err
+  }
+}
+
+export const resetError = () => {
+  return {
+    type: actionTypes.RESET_ERROR
+  };
+}
+
+export const registerUser = ( email, password, props) => {
+  return dispatch => {
     axios.post('auth/register', {
       email: email,
       password: password
-    }).catch(() => alert('uzytkownik juz istnieje'));
+    }).then(() => {
+      dispatch(loginUser(email, password, props))
+    }).catch((res) => {
+      dispatch(setError(res.response.status))
+    });
   }
 }

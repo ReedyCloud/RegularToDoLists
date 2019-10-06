@@ -82,11 +82,10 @@ class FullList extends React.Component {
     });
 
   return(
-    <>
+    <div className={styles.FullListContainer}>
       <div className={styles.ListTitle}>
         {this.props.match.params.title}
       </div>
-
       <div className={styles.FullList}>
         <ListState 
           status='To Do:'
@@ -96,7 +95,7 @@ class FullList extends React.Component {
             <NewTask listId={this.props.match.params.id} tasksUpdate={this.tasksUpdateHandler} />
         </ListState>
         <ListState 
-          status='Work in Poggers:'
+          status='Work in Progress:'
           tasks={states.workInProgress}
           onDragOver={(e) =>this.onDragOver(e)}
           onDrop={(e) => {this.onDrop(e, 'workInProgress')}}/>
@@ -106,7 +105,7 @@ class FullList extends React.Component {
           onDragOver={(e) =>this.onDragOver(e)}
           onDrop={(e) => {this.onDrop(e, 'finished')}}/>
       </div>
-    </>
+    </div>
   );
   }
 };

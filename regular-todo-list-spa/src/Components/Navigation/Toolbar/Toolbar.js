@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Logo from '../../../assets/images/logo/Logo.png';
+import Logo from '../../../assets/images/logo/LogoWhite.png';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import styles from './Toolbar.module.scss';
 

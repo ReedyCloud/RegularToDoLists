@@ -13,3 +13,6 @@ export const LISTS_UPDATE= 'LISTS_UPDATE';
 export const GET_TASKS= 'GET_TASKS';
 export const UPDATE_TASKS= 'UPDATE_TASKS';
 export const CREATE_TASK= 'CREATE_TASK';
+
+export const SET_ERROR= 'SET_ERROR';
+export const RESET_ERROR= 'RESET_ERROR';

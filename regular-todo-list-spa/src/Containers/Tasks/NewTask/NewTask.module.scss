@@ -35,7 +35,8 @@
   text-align: left;
   cursor: auto;
 
-  input[type=text], 
+  input[type=text],
+  input[type=number],
   textarea {
     width: 60%;
     display: block;

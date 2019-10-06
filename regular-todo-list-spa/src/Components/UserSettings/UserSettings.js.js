@@ -1,9 +1,9 @@
 import React from 'react';
 
-const userSettings = (props) => {
+const userSettings = () => {
   return(
     <div style={{paddingTop:'300px', textAlign: 'center'}}>
-      Work in Progrss
+      Work in Progress
     </div>
   );
 };

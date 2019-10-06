@@ -1,23 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  email: '',
-  password: '',
-  login: true
-}
-
-const setEmail = (state, action) => {
-  return {
-    ...state,
-    email: action.email
-  }
-}
-
-const setPassword = (state, action) => {
-  return {
-    ...state,
-    password: action.password
-  }
+  login: true,
+  error: null
 }
 
 const setLogin = (state) => {
@@ -28,12 +13,25 @@ const setLogin = (state) => {
   }
 }
 
+const setError = (state, action) => {
+  return {
+    ...state,
+    error: action.val
+  }
+}
+
+const resetError = (state) => {
+  return {
+    ...state,
+    error: null
+  }
+}
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_EMAIL: return setEmail(state, action);
-    case actionTypes.SET_PASSWORD: return setPassword(state, action);
     case actionTypes.SET_LOGIN: return setLogin(state);
+    case actionTypes.SET_ERROR: return setError(state, action);
+    case actionTypes.RESET_ERROR: return resetError(state, action);
     default: return state;
   }
 };

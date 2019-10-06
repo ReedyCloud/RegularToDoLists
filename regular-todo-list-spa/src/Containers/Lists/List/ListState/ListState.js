@@ -8,7 +8,7 @@ const listState = (props) => {
     onDragOver={props.onDragOver}
     onDrop={props.onDrop} >
       <div>
-       <h3> {props.status}</h3>
+       <h3 className={styles.TaskStatus}> {props.status}</h3>
         {props.children}
         {props.tasks}
       </div>

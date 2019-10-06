@@ -9,8 +9,11 @@ class AuthComponent extends React.Component {
     if(!jwt) {
       this.props.history.push('/');
     }
-    axios.get('/getUser', {headers:{Authorization: `Bearer ${jwt}`}});
-
+    axios.get('/getUser', { 
+      headers:{ 
+        Authorization: `Bearer ${jwt}`
+      }
+    });
   }
 
   render () {

@@ -1,6 +1,10 @@
 .Container {
   display: flex;
   justify-content: center;
+  min-height: 937px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../../assets/images/loginBG.jpg');
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 
@@ -19,15 +23,21 @@
     text-align: center;
   }
   & > form{
-    text-align: center;
     label,
     input {
+      padding: 5px;
       margin: 0 auto;
       display: block;
     }
 
     label {
-      padding: 5px;
+      text-align: left;
+      padding: 5px 0;
+      padding-left: 22.2%;
+    }
+
+    input {
+      margin-bottom: 20px;
     }
     button {
       outline: none;
@@ -52,3 +62,23 @@
         color: purple;
   }}
 }
+
+
+.Error {
+  // input {
+  //   // position: relative;
+  //     outline: 1px solid red;
+
+  //     &:focus {
+  //       outline: none;
+  //     }
+  // }
+
+  // input::after{
+  //   // position: absolute;
+  //   content: " - Remember this";
+  //   display: block;
+  //   height: 20px;
+  // }
+}
+

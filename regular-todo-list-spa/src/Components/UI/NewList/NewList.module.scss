@@ -1,18 +1,16 @@
 .NewList {
-  min-height: 200px;
-  width:  19%;
-  min-width: 200px;
-  margin: 0 0.5%;
-  margin-bottom: 0.5%;
-  background-color: rgb(235, 235, 235);
-  border-radius: 20px;
-  border: 2px solid #aaa;
-  text-align: center;
-  overflow: hidden;
-  padding-top: 25px;
-   &> h2 {
+  height: 320px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 70px;
+  background-color: rgba(0, 0, 0, 0.363);
+  border-radius: 30px;
+
+  &> h2 {
      font-family: 'Roboto', sans-serif;
      margin: 1rem;
-     color: rgb(136, 136, 136);
+     color: rgb(233, 233, 233);
    }
 }

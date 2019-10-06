@@ -8,6 +8,13 @@ import Button from '../../Components/UI/Button/Button';
 
 class ListCreator extends React.Component {
   
+  listNameValidation = () => {
+    if(this.props.title.concat().length === 0) {
+      return;
+    }
+    this.props.onListCreated(this.props.title);
+  }
+
   render () {
     return(
       <>
@@ -18,7 +25,7 @@ class ListCreator extends React.Component {
         </h3> 
           <input type='text' placeholder='my name' value={this.props.title}
           onChange={(e)=> this.props.onSetListTitle(e.target.value) } required/>
-          <Button  clicked={() => this.props.onListCreated(this.props.title)} btnType={'btnCreateList'}>
+          <Button  clicked={this.listNameValidation} btnType={'btnCreateList'}>
             Create
           </Button>
       </div>
