@@ -1,0 +1,30 @@
+
+
+.Line1,
+.Line2 {
+  position: absolute;
+  background-color: black;
+  width: 100%;
+  height: 10%;
+  top: 50%;
+}
+
+.Xx {
+  width: 25px;
+  height: 25px;
+  position: relative;
+
+  &:hover{
+    .Line1,
+    .Line2 {
+  background-color: red;
+}
+  }
+}
+
+.Line1 {
+  transform: rotate(45deg);
+}
+.Line2 {
+  transform: rotate(-45deg);
+}
